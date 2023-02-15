@@ -3,7 +3,6 @@ from reviews.models import Title, Review, User
 from django.db.models import Avg
 
 
-
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
 
@@ -18,7 +17,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ['name', 'year', 'rating', 'description',]
+        fields = ['name', 'year', 'rating', 'description', ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -30,4 +29,4 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'text', 'author', 'score', 'pub_date']
+        fields = ['id', 'text', 'author', 'score', 'pub_date', ]

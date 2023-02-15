@@ -10,6 +10,12 @@ class Category(models.Model):
         verbose_name='Название',
         max_length=200)
 
+    slug = models.SlugField(
+        verbose_name='slug',
+        max_length=200,
+        null=True
+    )
+
     def __str__(self):
         return self.title
 
@@ -18,6 +24,12 @@ class Genre(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=200)
+
+    slug = models.SlugField(
+        verbose_name='slug',
+        max_length=200,
+        null=True
+    )
 
     def __str__(self):
         return self.title
