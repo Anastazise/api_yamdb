@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from api.permissions import IsAuthorOrStaff
-from api.serializers import ReviewSerializer
-from reviews.models import Review
+from api.serializers import ReviewSerializer, TitleSerializer
+from reviews.models import Review, Title
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -18,7 +18,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
         title_id = self.kwargs.get("title_id")
         new_queryset = Review.objects.filter(title=title_id)
         return new_queryset
-    
+
     def perform_create(self, serializer):
         title_id = self.kwargs.get("title_id")
         serializer.save(author=self.request.user, title_id=int(title_id))
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    serializer_class = TitleSerializer
+    queryset = Title.objects.all()
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
