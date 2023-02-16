@@ -1,8 +1,9 @@
 from api.permissions import IsAuthorOrStaff, IsStaffOrReadOnly
 from api.serializers import (CategorySerializer, GenreSerializer,
-                             ReviewSerializer, TitleSerializer)
+                             ReviewSerializer, TitleSerializer, CommentSerializer)
 from rest_framework import permissions, viewsets
-from reviews.models import Category, Genre, Review, Title
+from reviews.models import Category, Genre, Review, Title, Comment
+
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -41,3 +42,22 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = (IsStaffOrReadOnly,)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly]
+
+    def get_permissions(self):
+        if self.action == 'partial_update' or self.action == 'delete':
+            return (IsAuthorOrStaff(),)
+        return super().get_permissions()
+
+    def get_queryset(self):
+        review_id = self.kwargs.get("review_id")
+        new_queryset = Comment.objects.filter(review=review_id)
+        return new_queryset
+
+    def perform_create(self, serializer):
+        review_id = self.kwargs.get("review_id")
+        serializer.save(author=self.request.user, review_id=int(review_id))
