@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from reviews.models import Title, Review, User
+from reviews.models import Title, Review, User, Comment
 from django.db.models import Avg
 
 
@@ -10,10 +10,10 @@ class TitleSerializer(serializers.ModelSerializer):
         """
         Возвращает среднее значение рейтинга.
         """
-        avarage_rating = obj.reviews.all().aggregate(Avg('score'))['score__avg']
-        if avarage_rating is None:
+        average_rating = obj.reviews.all().aggregate(Avg('score'))['score__avg']
+        if average_rating is None:
             return 0
-        return int(avarage_rating)
+        return int(average_rating)
 
     class Meta:
         model = Title
@@ -30,3 +30,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'text', 'author', 'score', 'pub_date', ]
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        read_only=True, slug_field='username'
+    )
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'text', 'author', 'pub_date']
