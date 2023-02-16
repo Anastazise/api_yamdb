@@ -1,7 +1,9 @@
-from rest_framework import viewsets, permissions
-from api.permissions import IsAuthorOrStaff
-from api.serializers import ReviewSerializer, TitleSerializer, CommentSerializer
-from reviews.models import Review, Title, Comment
+from api.permissions import IsAuthorOrStaff, IsStaffOrReadOnly
+from api.serializers import (CategorySerializer, GenreSerializer,
+                             ReviewSerializer, TitleSerializer, CommentSerializer)
+from rest_framework import permissions, viewsets
+from reviews.models import Category, Genre, Review, Title, Comment
+
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -29,6 +31,17 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+
+class GenreViewSet(viewsets.ModelViewSet):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
+    permission_classes = (IsStaffOrReadOnly,)
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+    permission_classes = (IsStaffOrReadOnly,)
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
