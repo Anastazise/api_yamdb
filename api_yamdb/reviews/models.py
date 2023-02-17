@@ -6,6 +6,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class User(AbstractUser):
+    super().AbstractUser('username', 'first_name', 'last_name')
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
@@ -14,7 +15,6 @@ class User(AbstractUser):
         (MODERATOR, 'moderator'),
         (ADMIN, 'admin'),
     ]
-
     email = models.EmailField('Email пользователя', unique=True)
     bio = models.TextField('О себе', blank=True, max_length=200)
     role = models.CharField(
