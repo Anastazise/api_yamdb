@@ -17,7 +17,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ['name', 'year', 'rating', 'description', ]
+        fields = ['name', 'year', 'rating', ]
 
 
 class ReviewSerializer(serializers.ModelSerializer):
