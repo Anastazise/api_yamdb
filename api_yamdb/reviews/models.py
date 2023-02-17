@@ -94,7 +94,7 @@ class Review(models.Model):
         unique_together = ('author', 'title')
 
     def __str__(self):
-        return self.text[:10]
+        return f'Review {self.text[:10]} by {self.author}'
 
 
 class Comment(models.Model):
@@ -121,4 +121,4 @@ class Comment(models.Model):
     )
 
     def __str__(self):
-        return self.text[:10]
+        return f'Commnet {self.text[:10]} by {self.author}'

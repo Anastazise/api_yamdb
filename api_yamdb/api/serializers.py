@@ -29,7 +29,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ['id', 'text', 'author', 'score', 'pub_date', ]
+        fields = ['id', 'text', 'author', 'score', 'pub_date']
 
 
 class GenreSerializer(serializers.ModelSerializer):
@@ -42,6 +42,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['name', 'slug', ]
+
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
