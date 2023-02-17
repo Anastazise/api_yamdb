@@ -52,7 +52,7 @@ class Category(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Genre(models.Model):
@@ -67,7 +67,7 @@ class Genre(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Title(models.Model):
@@ -95,7 +95,7 @@ class Title(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Review(models.Model):
