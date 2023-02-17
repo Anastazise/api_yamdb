@@ -13,8 +13,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly]
     pagination_class = PageNumberPagination
-    filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('color', 'birth_year')
 
     def get_permissions(self):
         if self.action == 'partial_update' or self.action == 'delete':
@@ -38,6 +36,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = ('category', 'genre', 'name', 'year',)
+
 
 class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer

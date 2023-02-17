@@ -5,8 +5,8 @@ from reviews.models import Category, Genre, Review, Title, User, Comment
 
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
-    category = serializers.SlugRelatedField(many=True, slug_field='slug')
-    genre = serializers.SlugRelatedField(many=True, slug_field='slug')
+    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='slug')
+    genre = serializers.SlugRelatedField(queryset=Genre.objects.all(), many=True, slug_field='slug')
 
     def get_rating(self, obj):
         """
