@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -6,7 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class User(AbstractUser):
-    super().AbstractUser('username', 'first_name', 'last_name')
+    super().User('username', 'first_name', 'last_name')
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
