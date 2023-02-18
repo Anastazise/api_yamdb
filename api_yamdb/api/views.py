@@ -4,8 +4,35 @@ from api.serializers import (CategorySerializer, CommentSerializer,
                              TitleSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from reviews.models import Category, Comment, Genre, Review, Title
+from rest_framework.response import Response
+from reviews.models import Category, Comment, Genre, Review, Title, User
+
+from .permissions import IsAuthorOrStaff
+from .serializers import UserSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+    permission_classes = [IsAuthorOrStaff]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ('=username',)
+
+    @action(methods=['patch', 'get'], detail=False,
+            permission_classes=[permissions.IsAuthenticated])
+    def me(self, request):
+        user = self.request.user
+        serializer = self.get_serializer(user)
+        if self.request.method == 'PATCH':
+            serializer = self.get_serializer(
+                user, data=request.data, partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save(role=user.role)
+        return Response(serializer.data)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

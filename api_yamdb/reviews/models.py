@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -6,7 +5,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class User(AbstractUser):
-    super().AbstractUser('username', 'first_name', 'last_name')
     USER = 'user'
     ADMIN = 'admin'
     MODERATOR = 'moderator'
@@ -21,6 +19,9 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
+    password = None
+    last_login = None
+    date_joined = None
 
     @property
     def is_user(self):
@@ -32,7 +33,7 @@ class User(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == self.ADMIN or self.is_staff
+        return self.role == self.ADMIN
 
     class Meta:
         ordering = ('username',)
