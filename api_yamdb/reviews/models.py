@@ -30,10 +30,6 @@ class User(AbstractUser):
     date_joined = None
 
     @property
-    def is_user(self):
-        return self.role == self.USER
-
-    @property
     def is_moderator(self):
         return self.role == self.MODERATOR
 
@@ -58,7 +54,8 @@ class Category(models.Model):
     slug = models.SlugField(
         verbose_name='slug',
         max_length=200,
-        null=True
+        null=True,
+        unique=True,
     )
 
     def __str__(self):
@@ -73,7 +70,8 @@ class Genre(models.Model):
     slug = models.SlugField(
         verbose_name='slug',
         max_length=200,
-        null=True
+        null=True,
+        unique=True,
     )
 
     def __str__(self):
@@ -134,9 +132,6 @@ class Review(models.Model):
         auto_now_add=True,
         db_index=True
     )
-
-    class Meta:
-        unique_together = ('author', 'title')
 
     def __str__(self):
         return f'Review {self.text[:10]} by {self.author}'
