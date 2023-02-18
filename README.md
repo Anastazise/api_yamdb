@@ -25,7 +25,7 @@ source venv/scripts/activate
 ## - Install requirements
 python -m pip install --upgrade pip
 
-python pip install -r requirements.txt
+pip install -r requirements.txt
 
 ## - Make migrations
 python manage.py makemigrations

@@ -25,9 +25,6 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    password = None
-    last_login = None
-    date_joined = None
 
     @property
     def is_user(self):
@@ -134,9 +131,6 @@ class Review(models.Model):
         auto_now_add=True,
         db_index=True
     )
-
-    class Meta:
-        unique_together = ('author', 'title')
 
     def __str__(self):
         return f'Review {self.text[:10]} by {self.author}'
