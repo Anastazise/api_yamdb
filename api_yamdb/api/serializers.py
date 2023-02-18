@@ -12,6 +12,18 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_field = ('role',)
 
 
+class RegisterDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ("username", "email")
+        model = User
+
+
+class TokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
     category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='slug')
