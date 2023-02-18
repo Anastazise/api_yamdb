@@ -1,16 +1,15 @@
 from api.permissions import IsAdminOrReadOnly, IsAuthorOrStaff
 from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
-                             TitleSerializer)
+                             TitleSerializer, UserSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from reviews.models import Category, Comment, Genre, Review, Title, User
+from rest_framework.decorators import action
 
-from .permissions import IsAuthorOrStaff
-from .serializers import UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
