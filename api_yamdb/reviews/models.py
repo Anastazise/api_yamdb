@@ -14,6 +14,12 @@ class User(AbstractUser):
         (ADMIN, 'admin'),
     ]
     email = models.EmailField('Email пользователя', unique=True)
+    username = models.CharField(
+        verbose_name='Имя пользователя',
+        max_length=150,
+        null=True,
+        unique=True
+    )
     bio = models.TextField('О себе', blank=True, max_length=200)
     role = models.CharField(
         'Роль пользователя', max_length=50,
@@ -34,6 +40,9 @@ class User(AbstractUser):
     @property
     def is_admin(self):
         return self.role == self.ADMIN
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
         ordering = ('username',)

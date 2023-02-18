@@ -2,6 +2,7 @@ from api.views import (CategoryViewSet, GenreViewSet, ReviewViewSet,
                        TitleViewSet, CommentViewSet, UserViewSet)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
+from api.views import register, get_jwt_token
 
 app_name = 'api'
 
@@ -19,4 +20,6 @@ router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('auth/signup/', register, name='register'),
+    path('auth/token/', get_jwt_token, name='token')
 ]
