@@ -4,7 +4,7 @@ from api.serializers import (CategorySerializer, CommentSerializer,
                              TitleSerializer, UserSerializer,
                              RegisterDataSerializer, TokenSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, permissions, viewsets, status
+from rest_framework import generics, filters, permissions, viewsets, status, mixins
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -62,23 +62,32 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_fields = ('category', 'genre', 'name', 'year',)
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(generics.GenericAPIView,
+                   mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.DestroyModelMixin,
+                   viewsets.ViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('slug',)
+    lookup_field = 'slug'
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(generics.GenericAPIView,
+                   mixins.CreateModelMixin,
+                   mixins.ListModelMixin,
+                   mixins.DestroyModelMixin,
+                   viewsets.ViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
     search_fields = ('slug',)
-
+    lookup_field = 'slug'
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer

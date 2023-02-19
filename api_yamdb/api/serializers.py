@@ -58,7 +58,10 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['name', 'slug', ]
-
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
 
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
