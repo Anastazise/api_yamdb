@@ -131,6 +131,8 @@ class Review(models.Model):
         auto_now_add=True,
         db_index=True
     )
+
+
     class Meta:
         ordering = ('title',)
         verbose_name = 'Отзыв'
