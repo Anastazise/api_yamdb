@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.core.validators import RegexValidator
 
 
 class User(AbstractUser):
@@ -17,7 +17,7 @@ class User(AbstractUser):
     username = models.CharField(
         verbose_name='Имя пользователя',
         max_length=150,
-        null=True,
+        validators=[RegexValidator("^[A-Za-z][A-Za-z0-9_]{7,29}$", message='Введите корректное username')],
         unique=True
     )
     bio = models.TextField('О себе', blank=True, max_length=200)
@@ -25,7 +25,6 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    password = None
     last_login = None
     date_joined = None
 
@@ -38,7 +37,7 @@ class User(AbstractUser):
         return self.role == self.ADMIN
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', ]
 
     class Meta:
         ordering = ('username',)
@@ -132,6 +131,16 @@ class Review(models.Model):
         auto_now_add=True,
         db_index=True
     )
+    class Meta:
+        ordering = ('title',)
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'],
+                name='unique_review'
+            ),
+        ]
 
     def __str__(self):
         return f'Review {self.text[:10]} by {self.author}'
@@ -159,6 +168,10 @@ class Comment(models.Model):
         auto_now_add=True,
         db_index=True
     )
+    class Meta:
+        ordering = ('review',)
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
 
     def __str__(self):
         return f'Commnet {self.text[:10]} by {self.author}'
