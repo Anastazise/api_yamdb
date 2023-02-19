@@ -73,7 +73,7 @@ class GenreViewSet(generics.GenericAPIView,
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('slug',)
+    search_fields = ('name',)
     lookup_field = 'slug'
 
 
@@ -87,7 +87,7 @@ class CategoryViewSet(generics.GenericAPIView,
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = PageNumberPagination
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('slug',)
+    search_fields = ('name',)
     lookup_field = 'slug'
 
 class CommentViewSet(viewsets.ModelViewSet):
