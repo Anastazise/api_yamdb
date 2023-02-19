@@ -35,6 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(role=user.role)
+            return Response(serializer.data)
         return Response(serializer.data)
 
 
@@ -108,21 +109,34 @@ class CommentViewSet(viewsets.ModelViewSet):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def register(request):
-    serializer = RegisterDataSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    user = get_object_or_404(
-        User,
-        username=serializer.validated_data["username"]
-    )
-    confirmation_code = default_token_generator.make_token(user)
-    send_mail(
+    username = request.data.get("username")
+    email = request.data.get("email")
+    if User.objects.filter(username=username, email=email).exists():
+        user = User.objects.get(username=username, email=email)
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
         subject="Регистрация YaMDb",
         message=f"Ваш код: {confirmation_code}",
         from_email=None,
         recipient_list=[user.email],
-    )
-    return Response(serializer.data, status=status.HTTP_200_OK)
+        )
+        return Response(status=status.HTTP_200_OK)
+    else:
+        serializer = RegisterDataSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user = get_object_or_404(
+            User,
+            username=serializer.validated_data["username"]
+        )
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
+            subject="Регистрация YaMDb",
+            message=f"Ваш код: {confirmation_code}",
+            from_email=None,
+            recipient_list=[user.email],
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])

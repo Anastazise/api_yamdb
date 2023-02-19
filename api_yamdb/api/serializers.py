@@ -63,6 +63,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'url': {'lookup_field': 'slug'}
         }
 
+
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField()
     confirmation_code = serializers.CharField()
@@ -101,6 +102,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'text', 'author', 'pub_date']
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
