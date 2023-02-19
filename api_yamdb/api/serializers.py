@@ -21,35 +21,6 @@ class RegisterDataSerializer(serializers.ModelSerializer):
         model = User
 
 
-class TokenSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    confirmation_code = serializers.CharField()
-
-
-class TitleSerializer(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
-    category = serializers.SlugRelatedField(queryset=Category.objects.all(), slug_field='slug')
-    genre = serializers.SlugRelatedField(queryset=Genre.objects.all(), many=True, slug_field='slug')
-
-    def get_rating(self, obj):
-        """
-        Возвращает среднее значение рейтинга.
-        """
-        average_rating = obj.reviews.all().aggregate(Avg('score'))['score__avg']
-        if average_rating is None:
-            return None
-        return int(average_rating)
-
-    class Meta:
-        model = Title
-        fields = ['id',
-                  'name',
-                  'year',
-                  'rating',
-                  'description',
-                  'category',
-                  'genre',]
-
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
@@ -83,6 +54,36 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['name', 'slug', ]
+
+
+class TokenSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    confirmation_code = serializers.CharField()
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    rating = serializers.SerializerMethodField()
+    category = CategorySerializer(read_only=True)
+    genre = GenreSerializer(read_only=True, many=True)
+
+    def get_rating(self, obj):
+        """
+        Возвращает среднее значение рейтинга.
+        """
+        average_rating = obj.reviews.all().aggregate(Avg('score'))['score__avg']
+        if average_rating is None:
+            return None
+        return int(average_rating)
+
+    class Meta:
+        model = Title
+        fields = ['id',
+                  'name',
+                  'year',
+                  'rating',
+                  'description',
+                  'category',
+                  'genre',]
 
 
 class CommentSerializer(serializers.ModelSerializer):

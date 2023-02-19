@@ -48,11 +48,11 @@ class User(AbstractUser):
 class Category(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=200)
+        max_length=50)
 
     slug = models.SlugField(
         verbose_name='slug',
-        max_length=200,
+        max_length=50,
         null=True,
         unique=True,
     )
@@ -64,11 +64,11 @@ class Category(models.Model):
 class Genre(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        max_length=200)
+        max_length=50)
 
     slug = models.SlugField(
         verbose_name='slug',
-        max_length=200,
+        max_length=50,
         null=True,
         unique=True,
     )
