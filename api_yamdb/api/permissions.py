@@ -15,8 +15,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     permission to allow admins and moderators to edit and delete objects.
     Other users can use only safe methods
     """
-
-
     def has_object_permission(self, request, view, obj):
         if request.user == AnonymousUser():
             value = False
@@ -42,7 +40,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 
 class IsAdmin(permissions.BasePermission):
 
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
         return request.user.is_authenticated and (
             request.user.is_admin or request.user.is_superuser)
 

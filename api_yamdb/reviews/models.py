@@ -25,7 +25,7 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    # password=None
+    password=None
     # last_login = None
     # date_joined = None
 
