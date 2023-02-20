@@ -25,8 +25,9 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    last_login = None
-    date_joined = None
+    # password=None
+    # last_login = None
+    # date_joined = None
 
     @property
     def is_moderator(self):
