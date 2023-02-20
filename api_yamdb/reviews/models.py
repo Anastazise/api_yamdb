@@ -17,7 +17,8 @@ class User(AbstractUser):
     username = models.CharField(
         verbose_name='Имя пользователя',
         max_length=150,
-        validators=[RegexValidator("^[A-Za-z][A-Za-z0-9_]{7,29}$", message='Введите корректное username')],
+        validators=[RegexValidator("^[A-Za-z][A-Za-z0-9_]{7,29}$",
+                                   message='Введите корректное username')],
         unique=True
     )
     bio = models.TextField('О себе', blank=True, max_length=200)
@@ -25,9 +26,8 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    password=None
-    # last_login = None
-    # date_joined = None
+    last_login = None
+    date_joined = None
 
     @property
     def is_moderator(self):
@@ -36,7 +36,7 @@ class User(AbstractUser):
     @property
     def is_admin(self):
         return self.role == self.ADMIN
-    
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', ]
 
@@ -133,7 +133,6 @@ class Review(models.Model):
         db_index=True
     )
 
-
     class Meta:
         ordering = ('title',)
         verbose_name = 'Отзыв'
@@ -171,6 +170,7 @@ class Comment(models.Model):
         auto_now_add=True,
         db_index=True
     )
+
     class Meta:
         ordering = ('review',)
         verbose_name = 'Коментарий'

@@ -1,14 +1,6 @@
 from rest_framework import permissions
 from django.contrib.auth.models import AnonymousUser
 
-class IsAuthorOrStaff(permissions.BasePermission):
-    """
-    permission to allow owners, admins and moderators
-    to edit and delete objects.
-    """
-    def has_object_permission(self, request, view, obj):
-        return obj.author == request.user or request.user.is_moderator or request.user.is_admin
-
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
@@ -20,7 +12,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             value = False
         else:
             value = request.user.is_admin
-        
         return (
             request.method in permissions.SAFE_METHODS
             or value

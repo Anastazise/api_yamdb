@@ -1,10 +1,12 @@
-from api.permissions import IsAdminOrReadOnly, IsAdmin, IsAuthorAdminModeratorOrReadOnly
+from api.permissions import (IsAdminOrReadOnly, IsAdmin,
+                             IsAuthorAdminModeratorOrReadOnly)
 from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
                              TitleSerializer, UserSerializer,
                              RegisterDataSerializer, TokenSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, filters, permissions, viewsets, status, mixins
+from rest_framework import (generics, filters, permissions,
+                            viewsets, status, mixins)
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -28,15 +30,17 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes=[permissions.IsAuthenticated])
     def me(self, request):
         user = request.user
-        serializer = self.get_serializer(user)
+        if self.request.method == 'GET':
+            serializer = self.get_serializer(user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         if self.request.method == 'PATCH':
             serializer = self.get_serializer(
                 user, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(role=user.role)
-            return Response(serializer.data)
-        return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -78,10 +82,10 @@ class GenreViewSet(generics.GenericAPIView,
 
 
 class CategoryViewSet(generics.GenericAPIView,
-                   mixins.CreateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.DestroyModelMixin,
-                   viewsets.ViewSet):
+                      mixins.CreateModelMixin,
+                      mixins.ListModelMixin,
+                      mixins.DestroyModelMixin,
+                      viewsets.ViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
@@ -89,6 +93,7 @@ class CategoryViewSet(generics.GenericAPIView,
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     lookup_field = 'slug'
+
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
@@ -115,10 +120,10 @@ def register(request):
         user = User.objects.get(username=username, email=email)
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
-        subject="Регистрация YaMDb",
-        message=f"Ваш код: {confirmation_code}",
-        from_email=None,
-        recipient_list=[user.email],
+            subject="Регистрация YaMDb",
+            message=f"Ваш код: {confirmation_code}",
+            from_email=None,
+            recipient_list=[user.email],
         )
         return Response(status=status.HTTP_200_OK)
     else:

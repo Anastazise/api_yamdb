@@ -21,7 +21,6 @@ class RegisterDataSerializer(serializers.ModelSerializer):
         model = User
 
 
-
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         queryset=User.objects.all(),
@@ -78,7 +77,8 @@ class TitleSerializer(serializers.ModelSerializer):
         """
         Возвращает среднее значение рейтинга.
         """
-        average_rating = obj.reviews.all().aggregate(Avg('score'))['score__avg']
+        average_rating = obj.reviews.all().aggregate(
+            Avg('score'))['score__avg']
         if average_rating is None:
             return None
         return int(average_rating)
@@ -91,7 +91,7 @@ class TitleSerializer(serializers.ModelSerializer):
                   'rating',
                   'description',
                   'category',
-                  'genre',]
+                  'genre', ]
 
 
 class CommentSerializer(serializers.ModelSerializer):
