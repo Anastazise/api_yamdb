@@ -69,9 +69,22 @@ class TokenSerializer(serializers.Serializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        slug_field='slug', many=True, queryset=Genre.objects.all()
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Title
+        fields = '__all__'
+        
+
+class ReadOnlyTitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()
-    category = CategorySerializer(read_only=True)
-    genre = GenreSerializer(read_only=True, many=True)
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
 
     def get_rating(self, obj):
         """
@@ -85,13 +98,9 @@ class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Title
-        fields = ['id',
-                  'name',
-                  'year',
-                  'rating',
-                  'description',
-                  'category',
-                  'genre', ]
+        fields = (
+            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+        )
 
 
 class CommentSerializer(serializers.ModelSerializer):

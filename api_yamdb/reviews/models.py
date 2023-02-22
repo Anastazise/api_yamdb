@@ -26,8 +26,6 @@ class User(AbstractUser):
         'Роль пользователя', max_length=50,
         choices=USER_ROLE, default=USER
     )
-    last_login = None
-    date_joined = None
 
     @property
     def is_moderator(self):
@@ -104,6 +102,11 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = 'Произведение'
+        verbose_name_plural = 'Произведения'
+        ordering = ['name']
 
 
 class Review(models.Model):

@@ -3,7 +3,8 @@ from api.permissions import (IsAdminOrReadOnly, IsAdmin,
 from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
                              TitleSerializer, UserSerializer,
-                             RegisterDataSerializer, TokenSerializer)
+                             RegisterDataSerializer, TokenSerializer,
+                             ReadOnlyTitleSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (generics, filters, permissions,
                             viewsets, status, mixins)
@@ -11,7 +12,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from reviews.models import Category, Genre, Review, Title, User
-
+from api.filters import TitlesFilter
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -62,9 +63,13 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     queryset = Title.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('category', 'genre', 'name', 'year',)
+    filterset_class = TitlesFilter
+
+    def get_serializer_class(self):
+        if self.action in ("retrieve", "list"):
+            return ReadOnlyTitleSerializer
+        return TitleSerializer
 
 
 class GenreViewSet(generics.GenericAPIView,
