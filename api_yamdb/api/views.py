@@ -4,7 +4,7 @@ from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
                              TitleSerializer, UserSerializer,
                              RegisterDataSerializer, TokenSerializer,
-                             ReadOnlyTitleSerializer)
+                             ReadOnlyTitleSerializer, UserEditSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import (generics, filters, permissions,
                             viewsets, status, mixins)
@@ -27,7 +27,15 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ('=username',)
 
+    def update(self, request, *args, **kwargs):
+        if self.request.method == 'PATCH':
+            kwargs['partial'] = True
+            return super().update(request, *args, **kwargs)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+
     @action(methods=['patch', 'get'], detail=False,
+            serializer_class=UserEditSerializer,
             permission_classes=[permissions.IsAuthenticated])
     def me(self, request):
         user = request.user
@@ -39,10 +47,10 @@ class UserViewSet(viewsets.ModelViewSet):
                 user, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save(role=user.role)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
+ 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
