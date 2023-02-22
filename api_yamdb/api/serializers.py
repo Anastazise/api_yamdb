@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from django.db.models import Avg
 from rest_framework import serializers
-from reviews.models import Category, Genre, Review, Title, User, Comment
-from rest_framework.generics import get_object_or_404
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
 from rest_framework.validators import UniqueValidator
+from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,12 +26,14 @@ class UserSerializer(serializers.ModelSerializer):
                   "last_name", "bio", "role")
         model = User
 
+
 class UserEditSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("username", "email", "first_name",
                   "last_name", "bio", "role")
         model = User
         read_only_fields = ('role',)
+
 
 class RegisterDataSerializer(serializers.ModelSerializer):
 
@@ -93,10 +97,18 @@ class TitleSerializer(serializers.ModelSerializer):
         slug_field='slug', queryset=Category.objects.all()
     )
 
+    def validate(self, data):
+        request = self.context['request']
+        if request.method == "POST":
+            year = int(request.data['year'])
+            if year > datetime.now().year:
+                raise ValidationError('Неверный год')
+        return data
+
     class Meta:
         model = Title
         fields = '__all__'
-        
+
 
 class ReadOnlyTitleSerializer(serializers.ModelSerializer):
     rating = serializers.SerializerMethodField()

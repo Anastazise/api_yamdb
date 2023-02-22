@@ -1,22 +1,22 @@
-from api.permissions import (IsAdminOrReadOnly, IsAdmin,
+from api.filters import TitlesFilter
+from api.permissions import (IsAdmin, IsAdminOrReadOnly,
                              IsAuthorAdminModeratorOrReadOnly)
 from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, ReviewSerializer,
-                             TitleSerializer, UserSerializer,
-                             RegisterDataSerializer, TokenSerializer,
-                             ReadOnlyTitleSerializer, UserEditSerializer)
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import (generics, filters, permissions,
-                            viewsets, status, mixins)
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-from reviews.models import Category, Genre, Review, Title, User
-from api.filters import TitlesFilter
-from rest_framework_simplejwt.tokens import AccessToken
+                             GenreSerializer, ReadOnlyTitleSerializer,
+                             RegisterDataSerializer, ReviewSerializer,
+                             TitleSerializer, TokenSerializer,
+                             UserEditSerializer, UserSerializer)
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import (filters, generics, mixins, permissions, status,
+                            viewsets)
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import AccessToken
+from reviews.models import Category, Genre, Review, Title, User
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -32,7 +32,6 @@ class UserViewSet(viewsets.ModelViewSet):
             kwargs['partial'] = True
             return super().update(request, *args, **kwargs)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
 
     @action(methods=['patch', 'get'], detail=False,
             serializer_class=UserEditSerializer,
@@ -50,7 +49,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
- 
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
