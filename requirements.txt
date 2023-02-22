@@ -9,7 +9,7 @@ django-filter==22.1
 djangorestframework==3.12.4
 djangorestframework-simplejwt==5.2.2
 idna==3.4
-importlib-metadata==6.0.0
+importlib-metadata==4.2.0
 iniconfig==2.0.0
 packaging==23.0
 pluggy==0.13.1
