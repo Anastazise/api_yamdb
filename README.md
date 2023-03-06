@@ -6,7 +6,7 @@ YaMDb is an online database for reviews to titles such as films, books and music
 
 Each user can post a review for any title with raiting 1 to 10, and leave a comment to any review.
 
-Build with Django Rest Framework.
+Build with Python 3, Django 2.2, Django REST framework, SQLite3, Simple-JWT.
 
 Authorisation implemented with JWT tokens.
 
@@ -37,3 +37,7 @@ python manage.py runserver
 
 # API docs could be found here:
 http://127.0.0.1:8000/redoc/
+
+Anastasia Varva - part of User management (Auth and User): registration and authentication system, access rights, work with the token, confirmation system via e-mail.
+Igor Gorbenko - Categories, Genres and Titles: models, views, and endpoints for them.
+Evgeny Kosukha - reviews and Comments: models, views, endpoints, access rights for requests, ratings of works.
