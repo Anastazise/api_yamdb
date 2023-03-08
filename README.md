@@ -39,11 +39,11 @@ python manage.py runserver
 http://127.0.0.1:8000/redoc/
 
 # Authors:
-[Anastasia Varva] (https://github.com/Anastazise)
+[Anastasia Varva](https://github.com/Anastazise)
 part of User management (Auth and User): registration and authentication system, access rights, work with the token, confirmation system via e-mail.
 
-[Igor Gorbenko] (https://github.com/Hell-Writer)
+[Igor Gorbenko](https://github.com/Hell-Writer)
 Categories, Genres and Titles: models, views, and endpoints for them.
 
-[Evgeny Kosukha] (https://github.com/koseysh)
+[Evgeny Kosukha](https://github.com/koseysh)
 Reviews and Comments: models, views, endpoints, access rights for requests, ratings of works.
