@@ -4,27 +4,16 @@ from django.db.models import Avg
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.validators import UniqueValidator
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        validators=[
-            UniqueValidator(queryset=User.objects.all())
-        ],
-        required=True,
-    )
-    email = serializers.EmailField(
-        validators=[
-            UniqueValidator(queryset=User.objects.all())
-        ]
-    )
-
     class Meta:
-        fields = ("username", "email", "first_name",
-                  "last_name", "bio", "role")
+        fields = (
+            'first_name', 'last_name', 'username', 'bio', 'email', 'role'
+        )
         model = User
+        read_only_field = ('role',)
 
 
 class UserEditSerializer(serializers.ModelSerializer):
@@ -35,11 +24,39 @@ class UserEditSerializer(serializers.ModelSerializer):
         read_only_fields = ('role',)
 
 
-class RegisterDataSerializer(serializers.ModelSerializer):
+class RegisterDataSerializer(serializers.Serializer):
+    username = serializers.RegexField(
+        max_length=150,
+        regex=r'^[\w.@+=]+$',
+        required=True
+    )
+    email = serializers.EmailField(
+        max_length=254,
+        required=True
+    )
 
-    class Meta:
-        fields = ("username", "email")
-        model = User
+    def validate(self, data):
+        username = data.get('username')
+        email = data.get('email')
+        user_exists = User.objects.filter(email=email, username=username)
+        if user_exists:
+            return data
+        if username == 'me':
+            raise serializers.ValidationError('Введите другое имя')
+        if User.objects.filter(username=username):
+            raise serializers.ValidationError('Имя пользователя занято')
+        if User.objects.filter(email=email):
+            raise serializers.ValidationError('Email занят')
+        return data
+
+    def create(self, validated_data):
+        user, created = User.objects.get_or_create(
+            username=validated_data['username'],
+            email=validated_data['email']
+        )
+        if not created:
+            user.save()
+        return user
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -142,12 +159,3 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'text', 'author', 'pub_date']
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = (
-            'first_name', 'last_name', 'username', 'bio', 'email', 'role'
-        )
-        model = User
-        read_only_field = ('role',)

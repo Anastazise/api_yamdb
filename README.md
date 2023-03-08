@@ -38,8 +38,12 @@ python manage.py runserver
 # API docs could be found here:
 http://127.0.0.1:8000/redoc/
 
-Anastasia Varva - part of User management (Auth and User): registration and authentication system, access rights, work with the token, confirmation system via e-mail.
+# Authors:
+[Anastasia Varva] (https://github.com/Anastazise)
+part of User management (Auth and User): registration and authentication system, access rights, work with the token, confirmation system via e-mail.
 
-Igor Gorbenko - Categories, Genres and Titles: models, views, and endpoints for them.
+[Igor Gorbenko] (https://github.com/Hell-Writer)
+Categories, Genres and Titles: models, views, and endpoints for them.
 
-Evgeny Kosukha - reviews and Comments: models, views, endpoints, access rights for requests, ratings of works.
+[Evgeny Kosukha] (https://github.com/koseysh)
+Reviews and Comments: models, views, endpoints, access rights for requests, ratings of works.

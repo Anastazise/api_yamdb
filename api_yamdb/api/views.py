@@ -127,34 +127,21 @@ class CommentViewSet(viewsets.ModelViewSet):
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def register(request):
-    username = request.data.get("username")
-    email = request.data.get("email")
-    if User.objects.filter(username=username, email=email).exists():
-        user = User.objects.get(username=username, email=email)
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject="Регистрация YaMDb",
-            message=f"Ваш код: {confirmation_code}",
-            from_email=None,
-            recipient_list=[user.email],
-        )
-        return Response(status=status.HTTP_200_OK)
-    else:
-        serializer = RegisterDataSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        user = get_object_or_404(
-            User,
-            username=serializer.validated_data["username"]
-        )
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject="Регистрация YaMDb",
-            message=f"Ваш код: {confirmation_code}",
-            from_email=None,
-            recipient_list=[user.email],
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer = RegisterDataSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    user = get_object_or_404(
+        User,
+        username=serializer.validated_data["username"]
+    )
+    confirmation_code = default_token_generator.make_token(user)
+    send_mail(
+        subject="YaMDb registration",
+        message=f"Your confirmation code: {confirmation_code}",
+        from_email=None,
+        recipient_list=[user.email],
+    )
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
