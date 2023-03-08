@@ -154,7 +154,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return f'Review {self.text[:10]} by {self.author}'
+        return 'Review'
 
 
 class Comment(models.Model):
@@ -186,4 +186,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Коментарии'
 
     def __str__(self):
-        return f'Commnet {self.text[:10]} by {self.author}'
+        return 'Comment'
