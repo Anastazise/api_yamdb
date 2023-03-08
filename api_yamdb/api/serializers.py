@@ -102,7 +102,9 @@ class TitleSerializer(serializers.ModelSerializer):
         if request.method == "POST":
             year = int(request.data['year'])
             if year > datetime.now().year:
-                raise ValidationError('Неверный год')
+                raise ValidationError(
+                    'Год выпуска фильма не может быть больше текущего'
+                )
         return data
 
     class Meta:
